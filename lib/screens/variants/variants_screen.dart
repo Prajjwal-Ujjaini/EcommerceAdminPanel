@@ -5,11 +5,12 @@ import 'components/add_variant_form.dart';
 import 'components/variant_header.dart';
 import 'components/variants_list_section.dart';
 
+import '../../../utility/extensions.dart';
 
 class VariantsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return  SafeArea(
+    return SafeArea(
       child: SingleChildScrollView(
         primary: false,
         padding: EdgeInsets.all(defaultPadding),
@@ -30,18 +31,14 @@ class VariantsScreen extends StatelessWidget {
                           Expanded(
                             child: Text(
                               "My Variants",
-                              style: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .titleMedium,
+                              style: Theme.of(context).textTheme.titleMedium,
                             ),
                           ),
                           ElevatedButton.icon(
                             style: TextButton.styleFrom(
                               padding: EdgeInsets.symmetric(
                                 horizontal: defaultPadding * 1.5,
-                                vertical:
-                                defaultPadding,
+                                vertical: defaultPadding,
                               ),
                             ),
                             onPressed: () {
@@ -53,7 +50,8 @@ class VariantsScreen extends StatelessWidget {
                           Gap(20),
                           IconButton(
                               onPressed: () {
-                                //TODO: should complete call getAllVariant
+                                context.dataProvider
+                                    .getAllVariant(showSnack: true);
                               },
                               icon: Icon(Icons.refresh)),
                         ],

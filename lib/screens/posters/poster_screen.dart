@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import '../../utility/constants.dart';
 
+import '../../../utility/extensions.dart';
 
 class PosterScreen extends StatelessWidget {
   @override
@@ -49,7 +50,8 @@ class PosterScreen extends StatelessWidget {
                           Gap(20),
                           IconButton(
                               onPressed: () {
-                                //TODO: should complete call getAllPosters
+                                context.dataProvider
+                                    .getAllPosters(showSnack: true);
                               },
                               icon: Icon(Icons.refresh)),
                         ],

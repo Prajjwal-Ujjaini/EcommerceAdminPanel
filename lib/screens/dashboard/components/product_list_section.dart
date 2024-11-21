@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../utility/constants.dart';
 
+import '../../../utility/extensions.dart';
+
 class ProductListSection extends StatelessWidget {
   const ProductListSection({
     Key? key,
@@ -23,10 +25,7 @@ class ProductListSection extends StatelessWidget {
         children: [
           Text(
             "All Products",
-            style: Theme
-                .of(context)
-                .textTheme
-                .titleMedium,
+            style: Theme.of(context).textTheme.titleMedium,
           ),
           SizedBox(
             width: double.infinity,
@@ -57,12 +56,17 @@ class ProductListSection extends StatelessWidget {
                   ],
                   rows: List.generate(
                     dataProvider.products.length,
-                        (index) => productDataRow(dataProvider.products[index],edit: () {
-                          showAddProductForm(context, dataProvider.products[index]);
-                        },
-                          delete: () {
-                            //TODO: should complete call deleteProduct
-                          },),
+                    (index) => productDataRow(
+                      dataProvider.products[index],
+                      edit: () {
+                        showAddProductForm(
+                            context, dataProvider.products[index]);
+                      },
+                      delete: () {
+                        context.dashBoardProvider
+                            .deleteProduct(dataProvider.products[index]);
+                      },
+                    ),
                   ),
                 );
               },
@@ -74,7 +78,8 @@ class ProductListSection extends StatelessWidget {
   }
 }
 
-DataRow productDataRow(Product productInfo,{Function? edit, Function? delete}) {
+DataRow productDataRow(Product productInfo,
+    {Function? edit, Function? delete}) {
   return DataRow(
     cells: [
       DataCell(
@@ -84,7 +89,8 @@ DataRow productDataRow(Product productInfo,{Function? edit, Function? delete}) {
               productInfo.images?.first.url ?? '',
               height: 30,
               width: 30,
-              errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+              errorBuilder: (BuildContext context, Object exception,
+                  StackTrace? stackTrace) {
                 return Icon(Icons.error);
               },
             ),
@@ -97,7 +103,9 @@ DataRow productDataRow(Product productInfo,{Function? edit, Function? delete}) {
       ),
       DataCell(Text(productInfo.proCategoryId?.name ?? '')),
       DataCell(Text(productInfo.proSubCategoryId?.name ?? '')),
-      DataCell(Text('${productInfo.price}'),),
+      DataCell(
+        Text('${productInfo.price}'),
+      ),
       DataCell(IconButton(
           onPressed: () {
             if (edit != null) edit();

@@ -161,7 +161,8 @@ class ProductSubmitForm extends StatelessWidget {
                             category?.name ?? '',
                         onChanged: (newValue) {
                           if (newValue != null) {
-                            //TODO: should complete call  filterSubcategory
+                            context.dashBoardProvider
+                                .filterSubcategory(newValue);
                           }
                         },
                         validator: (value) {
@@ -185,7 +186,7 @@ class ProductSubmitForm extends StatelessWidget {
                             subCategory?.name ?? '',
                         onChanged: (newValue) {
                           if (newValue != null) {
-                            //TODO: should complete call filterBrand
+                            context.dashBoardProvider.filterBrand(newValue);
                           }
                         },
                         validator: (value) {
@@ -278,8 +279,9 @@ class ProductSubmitForm extends StatelessWidget {
                           displayItem: (VariantType? variantType) =>
                               variantType?.name ?? '',
                           onChanged: (newValue) {
+                            print('at UI ${newValue}');
                             if (newValue != null) {
-                              //TODO: should complete call filterVariant
+                              context.dashBoardProvider.filterVariant(newValue);
                             }
                           },
                           hintText: 'Select Variant type',
@@ -337,7 +339,7 @@ class ProductSubmitForm extends StatelessWidget {
                         context
                             .dashBoardProvider.addProductFormKey.currentState!
                             .save();
-                        //TODO: should complete call submitProduct
+                        context.dashBoardProvider.submitProduct();
                         Navigator.of(context).pop();
                       }
                     },

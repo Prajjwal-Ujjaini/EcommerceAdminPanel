@@ -2,6 +2,7 @@ import '../../../core/data/data_provider.dart';
 import '../../../models/variant.dart';
 import 'add_variant_form.dart';
 import 'package:flutter/material.dart';
+import '../../../utility/extensions.dart';
 import 'package:provider/provider.dart';
 import '../../../utility/color_list.dart';
 import '../../../utility/constants.dart';
@@ -56,7 +57,8 @@ class VariantsListSection extends StatelessWidget {
                         dataProvider.variants[index], index + 1, edit: () {
                       showAddVariantForm(context, dataProvider.variants[index]);
                     }, delete: () {
-                      //TODO: should complete call deleteVariant
+                      context.variantProvider
+                          .deleteVariant(dataProvider.variants[index]);
                     }),
                   ),
                 );

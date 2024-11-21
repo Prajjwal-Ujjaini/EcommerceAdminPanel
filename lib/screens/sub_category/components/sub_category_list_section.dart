@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../utility/color_list.dart';
 import '../../../utility/constants.dart';
+import '../../../utility/extensions.dart';
 
 class SubCategoryListSection extends StatelessWidget {
   const SubCategoryListSection({
@@ -60,7 +61,8 @@ class SubCategoryListSection extends StatelessWidget {
                             context, dataProvider.subCategories[index]);
                       },
                       delete: () {
-                        //TODO: should complete call deleteSubCategory
+                        context.subCategoryProvider.deleteSubCategory(
+                            dataProvider.subCategories[index]);
                       },
                     ),
                   ),

@@ -5,6 +5,8 @@ import '../../../models/product_summery_info.dart';
 import '../../../utility/constants.dart';
 import 'product_summery_card.dart';
 
+import '../../../utility/extensions.dart';
+
 class ProductSummerySection extends StatelessWidget {
   const ProductSummerySection({
     Key? key,
@@ -16,11 +18,13 @@ class ProductSummerySection extends StatelessWidget {
 
     return Consumer<DataProvider>(
       builder: (context, dataProvider, _) {
-        int totalProduct = 0;
-        //TODO: should complete Make this product number dynamic bt calling calculateProductWithQuantity
-        totalProduct = 0;
-        int outOfStockProduct = 0;
-        int limitedStockProduct = 0;
+        int totalProduct = 1;
+        totalProduct =
+            context.dataProvider.calculateProductWithQuantity(quantity: null);
+        int outOfStockProduct =
+            context.dataProvider.calculateProductWithQuantity(quantity: 0);
+        int limitedStockProduct =
+            context.dataProvider.calculateProductWithQuantity(quantity: 1);
         int otherStockProduct =
             totalProduct - outOfStockProduct - limitedStockProduct;
 
@@ -76,7 +80,8 @@ class ProductSummerySection extends StatelessWidget {
               itemBuilder: (context, index) => ProductSummeryCard(
                 info: productSummeryItems[index],
                 onTap: (productType) {
-                  //TODO: should complete call filterProductsByQuantity
+                  context.dataProvider
+                      .filterProductsByQuantity(productType ?? '');
                 },
               ),
             ),

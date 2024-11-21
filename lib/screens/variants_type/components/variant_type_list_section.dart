@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../../utility/color_list.dart';
 import '../../../utility/constants.dart';
 import '../../../models/variant_type.dart';
+import '../../../utility/extensions.dart';
 
 class VariantsTypeListSection extends StatelessWidget {
   const VariantsTypeListSection({
@@ -60,7 +61,8 @@ class VariantsTypeListSection extends StatelessWidget {
                             context, dataProvider.variantTypes[index]);
                       },
                       delete: () {
-                        //TODO: should complete call deleteVariantType
+                        context.variantTypeProvider.deleteVariantType(
+                            dataProvider.variantTypes[index]);
                       },
                     ),
                   ),
