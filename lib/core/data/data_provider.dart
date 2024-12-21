@@ -69,6 +69,7 @@ class DataProvider extends ChangeNotifier {
     getAllVariant();
     getAllCoupons();
     getAllPosters();
+    getAllOrders();
   }
 
   Future<List<Category>> getAllCategory({bool showSnack = false}) async {
@@ -375,11 +376,60 @@ class DataProvider extends ChangeNotifier {
 
   //TODO: should complete filterNotifications
 
-  //TODO: should complete getAllOrders
+  Future<List<Order>> getAllOrders({bool showSnack = false}) async {
+    try {
+      Response response = await service.getItems(endpointUrl: 'orders');
 
-  //TODO: should complete filterOrders
+      if (response.isOk) {
+        ApiResponse<List<Order>> apiResponse =
+            ApiResponse<List<Order>>.fromJson(
+                response.body,
+                (json) => (json as List)
+                    .map((item) => Order.fromJson(item))
+                    .toList());
+        _allOrders = apiResponse.data ?? [];
+        _filteredOrders = List.from(_allOrders);
+        notifyListeners();
+        if (showSnack) SnackBarHelper.showSuccessSnackBar(apiResponse.message);
+      }
+    } catch (e) {
+      print(e);
+      if (showSnack) SnackBarHelper.showErrorSnackBar(e.toString());
+      rethrow;
+    }
+    return _filteredOrders;
+  }
 
-  //TODO: should complete calculateOrdersWithStatus
+  void filterOrders(String keyword) {
+    if (keyword.isEmpty) {
+      _filteredOrders = List.from(_allOrders);
+    } else {
+      final lowerKeyword = keyword.toLowerCase();
+      _filteredOrders = _allOrders.where((order) {
+        bool nameMatches =
+            (order.userID?.name ?? '').toLowerCase().contains(lowerKeyword);
+        bool statusMatches =
+            (order.orderStatus ?? '').toLowerCase().contains(lowerKeyword);
+
+        return nameMatches || statusMatches;
+      }).toList();
+    }
+    notifyListeners();
+  }
+
+  int calculateOrdersWithStatus({String? status}) {
+    int totalOrders = 0;
+    if (status == null) {
+      totalOrders = _allOrders.length;
+    } else {
+      for (Order order in _allOrders) {
+        if (order.orderStatus == status) {
+          totalOrders += 1;
+        }
+      }
+    }
+    return totalOrders;
+  }
 
   void filterProductsByQuantity(String productQntType) {
     if (productQntType == 'All Product') {

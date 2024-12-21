@@ -1,8 +1,13 @@
+import 'dart:developer';
+
+import 'package:get/get.dart';
+
+import '../../../models/api_response.dart';
 import '../../../models/order.dart';
 import '../../../services/http_services.dart';
 import 'package:flutter/cupertino.dart';
 import '../../../core/data/data_provider.dart';
-
+import '../../../utility/snack_bar_helper.dart';
 
 class OrderProvider extends ChangeNotifier {
   HttpService service = HttpService();
@@ -14,11 +19,63 @@ class OrderProvider extends ChangeNotifier {
 
   OrderProvider(this._dataProvider);
 
-  //TODO: should complete updateOrder
+  updateOrder() async {
+    try {
+      if (orderForUpdate != null) {
+        Map<String, dynamic> order = {
+          'trackingUrl': trackingUrlCtrl.text,
+          'orderStatus': selectedOrderStatus,
+        };
+        final response = await service.updateItem(
+            endpointUrl: 'orders',
+            itemData: order,
+            itemId: orderForUpdate?.sId ?? '');
+        if (response.isOk) {
+          ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
+          if (apiResponse.success == true) {
+            SnackBarHelper.showSuccessSnackBar(apiResponse.message);
+            log('Order added');
+            _dataProvider.getAllOrders();
+          } else {
+            SnackBarHelper.showErrorSnackBar(
+                'Failed to update orders ${apiResponse.message}');
+          }
+        } else {
+          SnackBarHelper.showErrorSnackBar(
+              'Error ${response.body?['message'] ?? response.statusText}');
+        }
+      }
+    } catch (e) {
+      print(e);
+      SnackBarHelper.showErrorSnackBar('An error occured ${e}');
+      rethrow;
+    }
+  }
 
+  deleteOrder(Order order) async {
+    try {
+      Response response = await service.deleteItem(
+          endpointUrl: 'orders', itemId: order.sId ?? '');
+      if (response.isOk) {
+        ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
+        if (apiResponse.success == true) {
+          SnackBarHelper.showSuccessSnackBar('Order Deleted Successfully');
 
-  //TODO: should complete deleteOrder
-
+          _dataProvider.getAllOrders();
+        } else {
+          SnackBarHelper.showErrorSnackBar(
+              'Failed to Deleted orders ${apiResponse.message}');
+        }
+      } else {
+        SnackBarHelper.showErrorSnackBar(
+            'Error ${response.body?['message'] ?? response.statusText}');
+      }
+    } catch (e) {
+      print(e);
+      SnackBarHelper.showErrorSnackBar('An error occured ${e}');
+      rethrow;
+    }
+  }
 
   updateUI() {
     notifyListeners();

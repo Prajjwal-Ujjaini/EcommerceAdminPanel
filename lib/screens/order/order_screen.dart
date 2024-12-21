@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import '../../utility/constants.dart';
 import '../../widgets/custom_dropdown.dart';
+import '../../../utility/extensions.dart';
 
 class OrderScreen extends StatelessWidget {
   @override
@@ -38,13 +39,21 @@ class OrderScreen extends StatelessWidget {
                             child: CustomDropdown(
                               hintText: 'Filter Order By status',
                               initialValue: 'All order',
-                              items: ['All order', 'pending', 'processing', 'shipped', 'delivered', 'cancelled'],
+                              items: [
+                                'All order',
+                                'pending',
+                                'processing',
+                                'shipped',
+                                'delivered',
+                                'cancelled'
+                              ],
                               displayItem: (val) => val,
                               onChanged: (newValue) {
                                 if (newValue?.toLowerCase() == 'all order') {
-                                  //TODO: should complete call filterOrders
+                                  context.dataProvider.filterOrders('');
                                 } else {
-                                  //TODO: should complete call filterOrders
+                                  context.dataProvider.filterOrders(
+                                      newValue?.toLowerCase() ?? "");
                                 }
                               },
                               validator: (value) {
@@ -58,7 +67,8 @@ class OrderScreen extends StatelessWidget {
                           Gap(40),
                           IconButton(
                               onPressed: () {
-                                //TODO: should complete call getAllOrders
+                                context.dataProvider
+                                    .getAllOrders(showSnack: true);
                               },
                               icon: Icon(Icons.refresh)),
                         ],
